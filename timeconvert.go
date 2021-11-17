@@ -25,13 +25,11 @@ func convertToTime(data interface{}) time.Time {
 			layoutFormat := "2006-01-02 15:04:05"
 			strconv, _ := time.Parse(layoutFormat, v.String())
 			return strconv
-
 		}
 	case reflect.Int:
 		{
 			tm := time.Unix(v.Int(), 0)
 			return tm
-
 		}
 	case reflect.Struct:
 		{
