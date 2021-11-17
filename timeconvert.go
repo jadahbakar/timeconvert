@@ -1,7 +1,6 @@
 package timeconvert
 
 import (
-	"fmt"
 	"reflect"
 	"time"
 )
@@ -20,7 +19,6 @@ func convertToTime(data interface{}) time.Time {
 	}
 	v := reflect.ValueOf(data)
 	v = reflect.Indirect(v)
-	fmt.Printf("%v\n", v.Type().Kind())
 	switch v.Type().Kind() {
 	case reflect.String:
 		{
@@ -34,6 +32,11 @@ func convertToTime(data interface{}) time.Time {
 			tm := time.Unix(v.Int(), 0)
 			return tm
 
+		}
+	case reflect.Struct:
+		{
+			t, _ := data.(time.Time)
+			return t
 		}
 	default:
 		return time.Time{}
