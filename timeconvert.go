@@ -15,31 +15,27 @@ func TimeConv(items ...interface{}) time.Time {
 }
 
 func convertToTime(data interface{}) time.Time {
-	timeType := reflect.TypeOf(time.Time{})
 	if data == nil {
 		return time.Time{}
 	}
 	v := reflect.ValueOf(data)
 	v = reflect.Indirect(v)
-	if !v.Type().ConvertibleTo(timeType) {
-		return time.Time{}
-	}
-	if _, ok := v.Interface().(time.Time); ok {
-		fmt.Println("Ok")
-		res := v.Convert(timeType)
-		return res.Interface().(time.Time).UTC().Format()
-	} else {
-		return time.Time{}
-	}
+	fmt.Printf("%v\n", v.Type().Kind())
+	switch v.Type().Kind() {
+	case reflect.String:
+		{
+			layoutFormat := "2006-01-02 15:04:05"
+			strconv, _ := time.Parse(layoutFormat, v.String())
+			return strconv
 
-	// return res
-	// timeType := reflect.TypeOf(time.Time{})
-	// v := reflect.ValueOf(data)
-	// v = reflect.Indirect(v)
-	// if !v.Type().ConvertibleTo(timeType) {
-	// 	return time.Time{}
-	// }
-	// res := v.Convert(timeType)
-	// return res.Interface().(time.Time)
-	// return time.Time{}
+		}
+	case reflect.Int:
+		{
+			tm := time.Unix(v.Int(), 0)
+			return tm
+
+		}
+	default:
+		return time.Time{}
+	}
 }
